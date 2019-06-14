@@ -1,4 +1,4 @@
-// Yölamppu, joka käynnistyy auringonlaskiessa
+// Yölamppu, joka käynnistyy auringon laskiessa
 // nerokkaan kaavan alku=11+month*2 mukaan
 
 
