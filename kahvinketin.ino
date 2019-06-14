@@ -1,6 +1,7 @@
 // Kahvinkeittimen webbiserveri, joka toimii vain 10 minuuttia kerrallaan.
 // Käynnistyy napista tai webbisivulta.
-// Sininen Ledi syttyy jos Wifi-yhteys toimii
+// Sininen Ledi syttyy jos Wifi-yhteys toimii.
+// Tässä käytetään vain sitä RELE-ON/OFF piuhaa.
 
 #include <ESP8266WiFi.h>
 
@@ -137,12 +138,11 @@ void loop(){
               client.println("<p><a href=\"/5/on\"><button class=\"button\">ON</button></a></p>");
             } else {
               client.println("<p><a href=\"/5/off\"><button class=\"button button2\">OFF</button></a></p>");
-	      client.println(600-(currentMillis - previousMillis)/1000);
+	      client.println(600-(currentMillis - previousMillis)/1000); // Jäljellä olevat sekunnit
             } 
                
-
             // Display current state, and ON/OFF buttons for GPIO 4  
-            client.println("<p>SININEN LEDI </p>");
+            client.println("<p>SININEN LEDI </p>"); // testauksen vuoksi
             // If the SininenLediState is off, it displays the ON button       
             if (SininenLediState=="off") {
               client.println("<p><a href=\"/4/on\"><button class=\"button\">ON</button></a></p>");
