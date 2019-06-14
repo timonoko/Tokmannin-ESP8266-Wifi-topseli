@@ -1,14 +1,12 @@
-/*********
-  Rui Santos
-  Complete project details at http://randomnerdtutorials.com  
-*********/
+// Kahvinkeittimen webbiserveri, joka toimii vain 10 minuuttia kerrallaan.
+// Käynnistyy napista tai webbisivulta.
+// Sininen Ledi syttyy jos Wifi-yhteys toimii
 
-// Load Wi-Fi library
 #include <ESP8266WiFi.h>
 
 // Replace with your network credentials
-const char* ssid     = "Jorpakko";
-const char* password = "Juhannusyona";
+const char* ssid     = "*****";
+const char* password = "*******";
 
 // Set web server port number to 80
 WiFiServer server(80);
