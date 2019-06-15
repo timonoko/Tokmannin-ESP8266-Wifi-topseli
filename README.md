@@ -5,4 +5,4 @@ Kiinalainen töpseliserveri on aika paska, siksi omatekemä.
 
 Lisätiedot: https://teknologinenrapeltaja.blogspot.com/2018/01/tokmannin-wifi-pistorasia.html
 
-Ööö. Näitä voi tietysti käynnistellä suoraan verkosta  "wget http://192.168.0.53/5/on" ja  "wget http://192.168.0.53/5/off". Siksi monimutkaisemmat ajastintoiminnat töpseleissä on aika turhia.
+Ööö. Näitä voi tietysti käynnistellä suoraan verkko-scriptillä  "wget http://192.168.0.53/5/on" ja  "wget http://192.168.0.53/5/off". Siksi monimutkaisemmat ajastintoiminnat töpseleissä on aika turhia.
