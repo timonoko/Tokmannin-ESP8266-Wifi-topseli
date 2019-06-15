@@ -8,8 +8,8 @@
 
 
 // Replace with your network credentials
-const char* ssid     = "Jorpakko";
-const char* password = "Juhannusyona";
+const char* ssid     = "***";
+const char* password = "****";
 
 const long utcOffsetInSeconds = 3600;
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
