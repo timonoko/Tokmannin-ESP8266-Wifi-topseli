@@ -1,0 +1,18 @@
+#! /bin/bash
+# Äsh!
+# Paska wifi-serveri poistaa vehkeet, joita ei ole käytetty vähään aikaan.
+# Tämä vilkuttaa kaikkien töpseleiden sinisiä ledejä tasaseen tahtiin.
+
+cd /tmp
+while true ; do
+  for x in $(seq  51 54) ; do
+     wget -T 1 -t 1 http://192.168.0.$x/4/off
+     rm -f off
+  done
+  sleep 1
+  for x in $(seq  51 54) ; do
+     wget -T 1 -t 1 http://192.168.0.$x/4/on
+     rm -f on
+  done
+  sleep 1
+done
