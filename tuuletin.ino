@@ -6,8 +6,8 @@
 #include <ESP8266WiFi.h>
 
 // Replace with your network credentials
-const char* ssid     = "***";
-const char* password = "**";
+  const char* ssid     = "***";
+  const char* password = "**"; 
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -55,6 +55,9 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   server.begin();
+  WiFi.softAP("Tuuletin", "Juhannusyona");
+  Serial.print("Soft-AP IP address = ");
+  Serial.println(WiFi.softAPIP());
   digitalWrite(SininenLedi, HIGH);
   SininenLediState = "on";
 }
@@ -133,6 +136,7 @@ void loop(){
             client.println("<body><h1>TUULETIN</h1> ");
 	    client.println("<p>");
 	    client.println(WiFi.localIP());            
+	    client.println(WiFi.softAPIP());
             // Display current state, and ON/OFF buttons for GPIO 5  
             client.println("<p>RELE</p>");
             // If the relayONState is off, it displays the ON button       
