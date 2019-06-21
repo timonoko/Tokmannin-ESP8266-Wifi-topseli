@@ -55,7 +55,7 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   server.begin();
-  WiFi.softAP("Tuuletin", "Juhannusyona");
+  WiFi.softAP("Tuuletin", "salasana");
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
   digitalWrite(SininenLedi, HIGH);
