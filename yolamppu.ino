@@ -1,4 +1,4 @@
-// Yölamppu, joka käynnistyy auringon laskiessa
+// Yölamppu, joka käynnistyy auringonlaskiessa
 // nerokkaan kaavan alku=11+month*2 mukaan
 
 
@@ -9,7 +9,7 @@
 
 // Replace with your network credentials
 const char* ssid     = "***";
-const char* password = "****";
+const char* password = "***";
 
 const long utcOffsetInSeconds = 3600;
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -63,6 +63,8 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   server.begin();
+  //  WiFi.softAP("Yolamppu", "Juhannusyona");
+  WiFi.softAPdisconnect(true);
   digitalWrite(SininenLedi, HIGH);
   timeClient.begin();
   timeClient.setTimeOffset(3600*2);
@@ -83,16 +85,18 @@ void loop(){
   if (month > 6) { alku=11+(13-month)*2 ;} ;
   int loppu=24-alku ;
 
+  /*
   if (hour == alku && minute == 0 && relayONState == "off" ) {
     Serial.println("GPIO 5 on");
     relayONState = "on";
     digitalWrite(relayON, HIGH); }
-
+  
   if (hour == loppu && minute == 0 && relayONState == "on" ) {
       Serial.println("GPIO 5 off");
       relayONState = "off";
       digitalWrite(relayON, LOW);
      } 
+  */
 
   unsigned long currentMillis = millis();
   /* if (  relayONState == "on" ) {
