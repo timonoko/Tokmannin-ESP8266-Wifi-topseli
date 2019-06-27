@@ -55,7 +55,9 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   server.begin();
+  WiFi.softAPdisconnect(true);
   digitalWrite(SininenLedi, HIGH);
+  SininenLediState = "on"; 
 }
 
 void loop(){
