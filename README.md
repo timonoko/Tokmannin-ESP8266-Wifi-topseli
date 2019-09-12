@@ -10,3 +10,5 @@ Arduino: https://randomnerdtutorials.com/how-to-install-esp8266-board-arduino-id
 Ööö. Näitä voi tietysti käynnistellä suoraan verkko-scriptillä  "wget http://192.168.0.53/5/on" ja  "wget http://192.168.0.53/5/off". Siksi monimutkaisemmat ajastintoiminnat töpseleissä on aika turhia.
 
 Äsh. Ei olisi pitänyt mainostaa. Nyt ne myy eioota, eikä uusia ole tulossa. Sonoff S20 on melkein sama, mutta eri.
+
+Jossei toimi kunnolla, niin "RTS/CTS Threshold" arvoon 100 wifi-serverissä.
