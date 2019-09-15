@@ -1,12 +1,12 @@
 # Termux battery charger controller.
 # The wireless charger is connected  to a Wifi-plug
-
-# This starts charging below %70 and stops charging above %80
+# starts charging below %70 and stops charging above %80
 
 
 import os,json,time
 
 os.system("termux-wake-lock")
+os.system("termux-wifi-enable true")
 while True:
   a=json.loads(os.popen("termux-battery-status").read())
   print a
