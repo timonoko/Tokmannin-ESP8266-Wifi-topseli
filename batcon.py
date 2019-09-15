@@ -2,7 +2,6 @@
 # The wireless charger is connected  to a Wifi-plug
 # starts charging below %70 and stops charging above %80
 
-
 import os,json,time
 
 os.system("termux-wake-lock")
