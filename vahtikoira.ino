@@ -6,8 +6,11 @@
 #include "ESP8266Ping.h"
 
 
-const char* ssid     = "Jorpakko";
-const char* password = "*******";
+
+#include "password.h" /*
+char* wifi_name = "****"; // Your Wifi network name here
+char* wifi_pass = "****";    // Your Wifi network password here
+*/
 
 WiFiServer server(80);
 
@@ -16,6 +19,7 @@ String header;
 String relayONState = "off";
 String relayOFFState = "off";
 String SininenLediState = "off";
+String VahtikoiraState = "off";
 
 const int relayON = 5;
 const int relayOFF = 12;
@@ -24,6 +28,8 @@ const int Nappi = 14;
 
 unsigned long previousMillis = 0;
 const long interval = 5 * 60*1000; // 5  minsa
+int PANIC = 0 ; 
+
 const IPAddress remote_ip(192, 168, 1, 11);
 
 void setup() {
@@ -36,8 +42,8 @@ void setup() {
   digitalWrite(relayOFF, LOW);
   digitalWrite(SininenLedi, LOW);
   Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
+  Serial.println(wifi_name);
+  WiFi.begin(wifi_name, wifi_pass);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -53,6 +59,7 @@ void setup() {
   SininenLediState = "on";
   digitalWrite(relayON, HIGH);
   relayONState = "on";
+  VahtikoiraState = "on";
 }
 
 void loop(){
@@ -60,14 +67,19 @@ void loop(){
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    if (Ping.ping(remote_ip)) delay(1000); 
+    PANIC = PANIC + 1 ;
+    // Paniikki jos on-viestejä ei ole tullut 10*5 minuuttiin
+    if (Ping.ping(remote_ip) && PANIC < 10)  delay(1000);  
     else{
-      digitalWrite(relayON, LOW);
-      delay(5000);
-      digitalWrite(relayON, HIGH);
-      relayONState = "on"; }}
+      PANIC = 0;
+      if (VahtikoiraState=="on") {
+	digitalWrite(relayON, LOW);
+	delay(5000);
+	digitalWrite(relayON, HIGH); 
+	relayONState = "on"; }}}
   if ( digitalRead(Nappi) == 0) {
     if (  relayONState == "off" ) {
+      PANIC = 0;
       Serial.println("GPIO 5 on");
       relayONState = "on";
       digitalWrite(relayON, HIGH); }
@@ -95,7 +107,8 @@ void loop(){
               Serial.println("GPIO 5 on");
               relayONState = "on";
               digitalWrite(relayON, HIGH);
-	      previousMillis = currentMillis; 
+	      previousMillis = currentMillis;
+	      PANIC = 0;
             } else if (header.indexOf("GET /5/off") >= 0) {
               Serial.println("GPIO 5 off");
               relayONState = "off";
@@ -104,10 +117,18 @@ void loop(){
               Serial.println("GPIO 4 on");
               SininenLediState = "on";
               digitalWrite(SininenLedi, HIGH);
+	      PANIC = 0;
             } else if (header.indexOf("GET /4/off") >= 0) {
               Serial.println("GPIO 4 off");
               SininenLediState = "off";
               digitalWrite(SininenLedi, LOW);
+	    } else if (header.indexOf("GET /6/on") >= 0) {
+              Serial.println("Vahtikoira ON");
+              VahtikoiraState = "on";
+            } else if (header.indexOf("GET /6/off") >= 0) {
+              Serial.println("Vahtikoira OFF");
+              VahtikoiraState = "off";
+
             }
             
             client.println("<!DOCTYPE html><html>");
@@ -126,9 +147,16 @@ void loop(){
               client.println("<p><a href=\"/5/on\"><button class=\"button\">ON</button></a></p>");
             } else {
               client.println("<p><a href=\"/5/off\"><button class=\"button button2\">OFF</button></a></p>");
-	      client.println(5*60-(currentMillis - previousMillis)/60000); // Jäljellä olevat minuutit
+	      client.println(5*60-(currentMillis - previousMillis)/1000); // Jäljellä olevat sekunnit
             } 
-               
+
+            client.println("<p>VAHTIKOIRA</p>"); // testauksen vuoksi
+            if (VahtikoiraState=="off") {
+              client.println("<p><a href=\"/6/on\"><button class=\"button\">ON</button></a></p>");
+            } else {
+              client.println("<p><a href=\"/6/off\"><button class=\"button button2\">OFF</button></a></p>");
+            }
+	    
             client.println("<p>SININEN LEDI</p>"); // testauksen vuoksi
             if (SininenLediState=="off") {
               client.println("<p><a href=\"/4/on\"><button class=\"button\">ON</button></a></p>");
