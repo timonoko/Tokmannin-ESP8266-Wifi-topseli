@@ -11,16 +11,17 @@ releet=['-',0,0]
 
 TIMEOUT_NORM=5*60
 class d:
-    timeout=10
+    timeout=TIMEOUT_NORM
     ajastin=1
 
 def web_page():
-  if releet[1]==1: onoff="ON"
+  if releet[1]==1: onoff=str(d.timeout/60)+" min"
   else: onoff="OFF"
   menu="""
-    <p> """ + onoff + """ <a href="/5/on"> <button class="button">ON</button></a>
+    <h1>KAHVINKEITIN """+onoff+""" </h1> 
+    <p> <a href="/5/on"> <button class="button">ON</button></a>
      <a href="/5/off"> <button class="button button2">OFF</button></a></p>
-    <p> ALWAYS   <a href="/5/alw"> <button class="button">ON</button></a>"""+str(d.timeout/60)+"""</p>
+    <p>  <a href="/5/alw"> <button class="button">MORE</button></a></p>
     <p> LED <a href="/4/on"> <button class="button">ON</button></a>
      <a href="/4/off"> <button class="button button2">OFF</button></a> """+str(releet[2])+"""</p>
     """
@@ -35,7 +36,6 @@ def web_page():
   .button2{background-color: #4286f4;}</style>
      </head>
       <body>
-     <h1>KAHVINKEITIN</h1> 
      """ + menu + """
      </body>
    </html>"""
