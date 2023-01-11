@@ -56,10 +56,14 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
 
+from machine import WDT
+wdt=WDT() # about 6 seconds WatchDoG
+
 while True:
+    wdt.feed()
     s.settimeout(0.2)
     try:
-        conn, addr = s.accept()
+        conn, addr = s.accept() 
         request = conn.recv(1024)
         request = str(request)
         s.settimeout(5.0)
