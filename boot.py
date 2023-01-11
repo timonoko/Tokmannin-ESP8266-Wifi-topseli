@@ -6,7 +6,7 @@ relayOFF =Pin(12, Pin.OUT)
 relayON.value(1)
 
 SininenLedi = Pin(4, Pin.OUT)  
-for x in range(100):
+for x in range(50):
     SininenLedi.value(1)
     time.sleep(0.2)
     SininenLedi.value(0)
@@ -48,6 +48,13 @@ import webrepl
 webrepl.start()
 
 do_not_connect()
+
+for x in range(10):
+    print('waiting')
+    SininenLedi.value(1)
+    time.sleep(0.1)
+    SininenLedi.value(0)
+    time.sleep(1.9)
 
 import vahtikoira
 

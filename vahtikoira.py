@@ -28,6 +28,7 @@ def web_page():
     if VahtiKoira: RS=""
     menu="""<p><a href="/6/on"><button class="button%s">ON</button> </a>"""%(RS)
     menu+="""<a href="/6/off"><button class="button button3">OFF</button> </a>"""
+    menu+="""<p><a href="/reset"><button class="button button3">RESET</button> </a>"""
     sta_if = network.WLAN(network.STA_IF)
     this_ip=sta_if.ifconfig()[0]
     html = """
@@ -68,6 +69,13 @@ while True:
             relayON.value(1)
         if request.find('/6/off') == 6:
             VahtiKoira=False
+        if request.find('/reset') == 6:
+            relayON.value(0)
+            time.sleep(5)
+            relayON.value(1)
+            time.sleep(5)
+            import machine
+            machine.reset()
         response = web_page()
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-Type: text/html\n')
