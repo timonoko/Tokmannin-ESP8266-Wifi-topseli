@@ -5,13 +5,14 @@ try:
   import usocket as socket
 except:
   import socket
-import network,time
 
+import network,time,uping
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
 
+import machine
 from machine import Pin
 
 relayON =Pin(5, Pin.OUT)  
@@ -22,16 +23,29 @@ LO=0;HI=1
 
 relayState=0
 
+laskuri=0
+
 def buttoni():
-   global relayState
-   if BUTTON.value()==LO:
+    global relayState,laskuri
+    if BUTTON.value()==LO:
       if relayState==1:
         relayState=0
         relayON.value(0)
+        machine.reset() # OFF nappi boottaa
       else:
         relayState=1
+        relayOFF.value(0)
         relayON.value(1)
       time.sleep(1)
+    elif relayState==0:
+        laskuri+=1
+        if (laskuri%100)==0: print(laskuri)
+        if laskuri>1000:
+            laskuri=0
+            print('ping-testi')
+            p=uping.ping('192.168.1.11',count=1,timeout=100)
+            if p[1]==0: machine.reset()
+
 
 def web_page():
     RS=" button2"
@@ -69,6 +83,7 @@ while True:
         s.settimeout(5.0)
         if request.find('/5/on') == 6:
             relayState=1
+            relayOFF.value(0)
             relayON.value(1)
         if request.find('/5/off') == 6:
             relayState=0
