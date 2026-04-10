@@ -73,18 +73,7 @@ def web_page():
    </html>"""
     return html
 
-
-Vahtikoira=0
-
 while True:
-    if Vahtikoira<1000:
-        Vahtikoira+=1
-    elif Vahtikoira==1000:
-        print('vahtikoira')
-        from machine import WDT
-        wdt=WDT()
-        Vahtikoira=2000
-    else: wdt.feed()
     s.settimeout(0.2)
     try:
         conn, addr = s.accept()
