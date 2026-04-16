@@ -6,14 +6,16 @@ try:
 except:
   import socket
 
-import network,time,uping
+import network,time,uping,machine
+from machine import Pin
+from machine import WDT
+
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
+s.setblocking(False)
 
-import machine
-from machine import Pin
 
 relayON =Pin(5, Pin.OUT)  
 relayOFF =Pin(12, Pin.OUT)  
@@ -24,32 +26,44 @@ LO=0;HI=1
 relayState=0
 laskuri=0
 
+WDTON=False
+wdt=False
+
 def buttoni():
-    global relayState,laskuri
+    global relayState,laskuri,WDTON,wdt
     if BUTTON.value()==LO:
       if relayState==1:
         relayState=0
         relayON.value(0)
-        machine.reset() # OFF nappi boottaa
-      else:
+      elif not WDTON:
         relayState=1
         relayOFF.value(0)
         relayON.value(1)
+      else: machine.reset()
       time.sleep(1)
     elif relayState==0:
         laskuri+=1
-        if (laskuri%100)==0: print(laskuri)
-        if laskuri>1000:
-            laskuri=0
+        if (laskuri%10)==0: print(laskuri)
+        if laskuri%1000==0:
             print('ping-testi')
             p=uping.ping('192.168.1.11',count=1,timeout=100)
-            if p[1]==0: machine.reset()
-
+            if p[1]==0:
+                machine.reset()
+        if laskuri==21:
+            print('WDT ON')
+            wdt=WDT()
+            WDTON=True
+        if laskuri>10000:
+            machine.reset()
 
 def web_page():
     RS=" button2"
     if relayState==1: RS=""
-    menu="""<p><a href="/5/on"><button class="button%s">ON</button> </a>"""%(RS)
+    if WDTON:
+        nap="ON/wdt"
+    else:
+        nap="ON"
+    menu="""<p><a href="/5/on"><button class="button%s">%s</button> </a>"""%(RS,nap)
     menu+="""<a href="/5/off"><button class="button button3">OFF</button> </a>"""
     sta_if = network.WLAN(network.STA_IF)
     this_ip=sta_if.ifconfig()[0]
@@ -73,24 +87,33 @@ def web_page():
    </html>"""
     return html
 
-while True:
+WEBREPL=False
+while not WEBREPL:
+    if WDTON: wdt.feed()
     s.settimeout(0.2)
     try:
         conn, addr = s.accept()
         request = conn.recv(1024)
         request = str(request)
-        s.settimeout(5.0)
         if request.find('/5/on') == 6:
-            relayState=1
-            relayOFF.value(0)
-            relayON.value(1)
+            if WDTON: machine.reset()
+            elif relayState==0:
+                relayState=1
+                relayOFF.value(0)
+                relayON.value(1)
         if request.find('/5/off') == 6:
+            if relayState==0: machine.reset()
             relayState=0
             relayON.value(0)
         if request.find('/4/on') == 6:
+            print('SininenLedi ON')
             SininenLedi.value(1)
         if request.find('/4/off') == 6:
+            print('SininenLedi OFF')
             SininenLedi.value(0)
+        if request.find('/webrepl') == 6:
+            if WDTON: machine.reset()
+            WEBREPL=True
         response = web_page()
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-Type: text/html\n')
@@ -98,7 +121,12 @@ while True:
         conn.sendall(response)
         conn.close()
     except OSError:
-        buttoni() 
+        buttoni()
+    except:
+        if relayState==0: machine.reset()
+
+
+
 
 
 
